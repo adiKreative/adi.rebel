@@ -1,0 +1,401 @@
+<?php
+/*
+*Template Name: Template Edit Profile
+*/
+ 	// $rediect_url = esc_url(home_url('/account-my')).'/?rediect_url='.esc_url(home_url('/profile/'));
+  //  if (!is_user_logged_in()) { 
+ 	// header('Location: '.$rediect_url);
+ 	// exit; 
+  // }
+ get_header();
+ $user_id = get_current_user_id();
+ $user_details = get_userdata($user_id);
+?>
+
+<section class="dashboard">
+   <div class="container">
+      <div class="my-profile-part">
+         <div class="edit-page-part">
+            <div class="col-md-12 col-sm-12">
+               <h1>MY PROFILE</h1>
+            </div>
+            <div class="row">
+               <div class="col-md-3 col-sm-3">
+                  <div class="user-wrapper">
+                 <!--     <div class="profile-icon-box">
+                        <?php if(get_field('user_image', 'user_'.$user_id)){?>
+                        <img src="<?php the_field('user_image', 'user_'.$user_id); ?>" class="media-object">
+                        <?php }else{ ?>     
+                        <img src="<?php echo get_template_directory_uri(); ?>/assets/images/demo-profile.jpg" class="media-object">
+                        <?php } ?>      
+                     </div> -->
+                     <div class="user-description">
+                        <h4> <?php echo $user_details->user_firstname;?> <?php echo $user_details->user_lastname;?></h4>
+                       <!--  <p><a href="#" class="click-text">My Profile</a></p>
+                        <p><a href="#" class="click-text">Change Password</a></p> -->
+                     </div>
+                  </div>
+               </div>
+               <div class="col-md-9 col-sm-9">
+                  <table class="table table-bordered ">
+                     <tbody>
+                        <?php if(($user_details->user_firstname) != ''){?>
+                        <tr>
+                           <td>Name :</td>
+                           <td><?php echo $user_details->user_firstname;?> <?php echo $user_details->user_lastname;?></td>
+                        </tr>
+                        <?php } ?>
+                        <?php if(($user_details->user_email) != ''){?>
+                        <tr>
+                           <td>Email :</td>
+                           <td><?php echo $user_details->user_email;?></td>
+                        </tr>
+                        <?php } ?>
+                        <?php if(get_field('contact_number', 'user_'.$user_id)){?>
+                        <tr>
+                           <td>Contact no :</td>
+                           <td><?php the_field('contact_number', 'user_'.$user_id); ?></td>
+                        </tr>
+                        <?php } ?>
+                        <?php if(get_field('date_of_birth', 'user_'.$user_id)){?>
+                        <tr>
+                           <td>Date of Birth :</td>
+                           <td><?php the_field('date_of_birth', 'user_'.$user_id); ?></td>
+                        </tr>
+                        <?php } ?>
+                        <?php if(($user_details->description) != ''){?>
+                        <tr>
+                           <td>Profile Info :</td>
+                           <td><?php echo $user_details->description; ?></td>
+                        </tr>
+                        <?php } ?>
+                     </tbody>
+                  </table>
+                  <div class="edt-btn-part">
+                     <span class="btn crt-btn" data-toggle="modal" data-target="#Edit-profile-modal"><i class="fa fa-pencil-square-o" aria-hidden="true"></i>Edit Information</span>  
+
+                      <span class="btn crt-btn  black-bg-btn" data-toggle="modal" data-target="#change-password-modal"><i class="fa fa-unlock-alt" aria-hidden="true"></i>Change Password</span>                  
+                  </div>
+                  <div id="Edit-profile-modal" class="modal theme-modal fade " role="dialog">
+                     <div class="modal-dialog">
+                        <!-- Modal content-->
+                        <div class="modal-content">
+                           <div class="modal-header">
+                              <button type="button" class="close" data-dismiss="modal">×</button>
+                              <h4 class="modal-title">Edit All Information</h4>
+                           </div>
+                           <div class="loader" id="loader-info" style="display: none">
+                              <img src="<?php echo get_template_directory_uri();?>/assets/images/Preloader.gif" alt="">
+                           </div>
+                           <div class="modal-body">
+                              <div class="edit-profile-part">
+                                 <form class="form-horizontal" role="form" action="" method="post" enctype="multipart/form-data">
+                                    <div class="form-group">
+                                       <label class="control-label" for="usr">First Name :</label>
+                                       <input type="text" class="form-control" placeholder="First Name" value="<?php echo $user_details->user_firstname;?>" id="first_name">
+                                    </div>
+                                    <div class="form-group">
+                                       <label class="control-label" for="usr">Last Name :</label>
+                                       <input type="text" class="form-control" placeholder="Last Name" value="<?php echo $user_details->user_lastname;?>" id="last_name">           
+                                    </div>
+                                    <!-- <div class="form-group">                        
+                                       <label class="control-label" for="usr">Email :</label>
+                                       <input type="email" class="form-control" placeholder="Your Email:" value="<?php echo $user_details->user_email;?>" id="user_email">                        
+                                    </div> -->
+                                    <div class="form-group">
+                                       <label class="control-label" for="usr">Contact no :</label>
+                                       <input type="number" class="form-control frm-text" placeholder="Contact No." value="<?php the_field('contact_number', 'user_'.$user_id); ?>" id="contact_number">                       
+                                    </div>
+                                    <div class="form-group">
+                                       <label class="control-label" for="usr">Date of Birth:</label>
+                                       <input type="date" class="form-control frm-text" placeholder="D.O.B" value="<?php the_field('date_of_birth', 'user_'.$user_id); ?>" id="date_of_birth">                      
+                                    </div>
+                                    <div class="form-group">
+                                       <label class="control-label" for="usr">Profile Info: </label>
+                                       <textarea name="user_info"class="form-control frm-text" cols="30" rows="10" id="user_details"><?php echo $user_details->description; ?></textarea>                     
+                                    </div>
+                                    <div class="form-group">
+                                       <label class="control-label" for="usr">User Image: </label>
+                                       <input type="file" id="sortpicture" name="file" />                 
+                                    </div>
+                                    <div class="sbmt-btn-group"> 
+                                       <input class="btn  inquery-submit orng-btn" id="user_update" value="Save" type="submit" name="submit">
+                                       <input class="btn  inquery-submit" value="Cancel" type="submit" name="submit" data-dismiss="modal">
+                                    </div>
+                                 </form>
+                                 <p class="message-box" id="message-info" style="display: none"></p>
+                              </div>
+                              <!--edit-profile-part -->
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+
+
+                  <div id="change-password-modal" class="modal theme-modal fade " role="dialog">
+                     <div class="modal-dialog">
+                        <!-- Modal content-->
+                        <div class="modal-content">
+                           <div class="modal-header">
+                              <button type="button" class="close" data-dismiss="modal">×</button>
+                              <h4 class="modal-title">Change-Password</h4>
+                           </div>
+                           <div class="loader" id="loader-password" style="display: none">
+                              <img src="<?php echo get_template_directory_uri();?>/assets/images/Preloader.gif" alt="">
+                           </div>
+                           <div class="modal-body">
+                              <div class="edit-profile-part">
+                                 <form class="form-horizontal" role="form" method="post">
+                                    <div class="form-group">
+                                       <label class="control-label" for="usr">Current Password:</label>
+                                       <input type="password" class="form-control" id="current_password" placeholder="Current Password">                        
+                                    </div>
+                                    <div class="form-group">                      
+                                       <label class="control-label" for="usr">New Password:</label>
+                                       <input type="password" class="form-control " id="new_password" placeholder="New Password">
+                                    </div>
+                                    <div class="form-group">                        
+                                       <label class="control-label" for="usr">Confirm Password:</label>
+                                       <input type="password" class="form-control" id="con_password" placeholder="Confirm Password">                        
+                                    </div>                                    
+                                    
+                                    <div class="sbmt-btn-group"> 
+                                       <input class="btn  inquery-submit orng-btn" id="password_change" value="Save" type="submit" name="submit">
+                                       <input class="btn  inquery-submit" value="Cancel" type="submit" name="submit" data-dismiss="modal">
+                                    </div>
+                                 </form>
+                                 <p class="message-box" id="message-password" style="display: none"></p>
+                              </div>
+                              <!--edit-profile-part -->
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+
+               </div>
+               <!--end of col-md-9 -->
+            </div>
+         </div>
+      </div>
+   </div>
+</section>
+<input type="hidden" value="<?php echo $user_id;?>" id="user_id">
+
+<!--  sample   -->
+<?php
+   global $current_user, $wp_roles;
+//get_currentuserinfo(); //deprecated since 3.1
+$error = array();    
+/* If profile was saved, update profile. */
+if ( 'POST' == $_SERVER['REQUEST_METHOD'] && !empty( $_POST['action'] ) && $_POST['action'] == 'update-user' ) {
+
+    /* Update user password. */
+    if ( !empty($_POST['pass1'] ) && !empty( $_POST['pass2'] ) ) {
+        if ( $_POST['pass1'] == $_POST['pass2'] )
+            wp_update_user( array( 'ID' => $current_user->ID, 'user_pass' => esc_attr( $_POST['pass1'] ) ) );
+        else
+            $error[] = __('The passwords you entered do not match.  Your password was not updated.', 'profile');
+    }
+
+    /* Update user information. */
+    if ( !empty( $_POST['url'] ) )
+        wp_update_user( array( 'ID' => $current_user->ID, 'user_url' => esc_url( $_POST['url'] ) ) );
+    if ( !empty( $_POST['email'] ) ){
+        if (!is_email(esc_attr( $_POST['email'] )))
+            $error[] = __('The Email you entered is not valid.  please try again.', 'profile');
+        elseif(email_exists(esc_attr( $_POST['email'] )) != $current_user->id )
+            $error[] = __('This email is already used by another user.  try a different one.', 'profile');
+        else{
+            wp_update_user( array ('ID' => $current_user->ID, 'user_email' => esc_attr( $_POST['email'] )));
+        }
+    }
+
+    if ( !empty( $_POST['first-name'] ) )
+        update_user_meta( $current_user->ID, 'first_name', esc_attr( $_POST['first-name'] ) );
+    if ( !empty( $_POST['last-name'] ) )
+        update_user_meta($current_user->ID, 'last_name', esc_attr( $_POST['last-name'] ) );
+    if ( !empty( $_POST['description'] ) )
+        update_user_meta( $current_user->ID, 'description', esc_attr( $_POST['description'] ) );
+
+    /* Redirect so the page will show updated info.*/
+  /*I am not Author of this Code- i dont know why but it worked for me after changing below line to if ( count($error) == 0 ){ */
+    if ( count($error) == 0 ) {
+        //action hook for plugins and extra fields saving
+        do_action('edit_user_profile_update', $current_user->ID);
+        wp_redirect( get_permalink('account-my') );
+        exit;
+    }
+}
+
+ if ( have_posts() ) : while ( have_posts() ) : the_post(); ?>
+    <div id="post-<?php the_ID(); ?>">
+        <div class="entry-content entry">
+            <?php //else : ?>
+                <?php if ( count($error) > 0 ) echo '<p class="error">' . implode("<br />", $error) . '</p>'; ?>
+                <form method="post" id="adduser" action="<?php the_permalink('account-my'); ?>">
+                    <p class="form-username">
+                        <label for="first-name"><?php _e('First Name', 'profile'); ?></label>
+                        <input class="text-input" name="first-name" type="text" id="first-name" value="<?php the_author_meta( 'first_name', $current_user->ID ); ?>" />
+                    </p><!-- .form-username -->
+                    <p class="form-username">
+                        <label for="last-name"><?php _e('Last Name', 'profile'); ?></label>
+                        <input class="text-input" name="last-name" type="text" id="last-name" value="<?php the_author_meta( 'last_name', $current_user->ID ); ?>" />
+                    </p><!-- .form-username -->
+                    <p class="form-email">
+                        <label for="email"><?php _e('E-mail *', 'profile'); ?></label>
+                        <input class="text-input" name="email" type="text" id="email" value="<?php the_author_meta( 'user_email', $current_user->ID ); ?>" />
+                    </p><!-- .form-email -->
+                    <p class="form-url">
+                        <label for="url"><?php _e('Website', 'profile'); ?></label>
+                        <input class="text-input" name="url" type="text" id="url" value="<?php the_author_meta( 'user_url', $current_user->ID ); ?>" />
+                    </p><!-- .form-url -->
+                    <p class="form-password">
+                        <label for="pass1"><?php _e('Password *', 'profile'); ?> </label>
+                        <input class="text-input" name="pass1" type="password" id="pass1" />
+                    </p><!-- .form-password -->
+                    <p class="form-password">
+                        <label for="pass2"><?php _e('Repeat Password *', 'profile'); ?></label>
+                        <input class="text-input" name="pass2" type="password" id="pass2" />
+                    </p><!-- .form-password -->
+                    <p class="form-textarea">
+                        <label for="description"><?php _e('Biographical Information', 'profile') ?></label>
+                        <textarea name="description" id="description" rows="3" cols="50"><?php the_author_meta( 'description', $current_user->ID ); ?></textarea>
+                    </p><!-- .form-textarea -->
+
+                    <?php 
+                        //action hook for plugin and extra fields
+                        do_action('edit_user_profile',$current_user); 
+                    ?>
+                    <p class="form-submit">
+                        <?php echo $referer; ?>
+                        <input name="updateuser" type="submit" id="updateuser" class="submit button" value="<?php _e('Update', 'profile'); ?>" />
+                        <?php wp_nonce_field( 'update-user' ) ?>
+                        <input name="action" type="hidden" id="action" value="update-user" />
+                    </p><!-- .form-submit -->
+                </form><!-- #adduser -->
+            <?php// endif; ?>
+        </div><!-- .entry-content -->
+    </div><!-- .hentry .post -->
+    <?php endwhile; ?>
+<?php else: ?>
+    <p class="no-data">
+        <?php _e('Sorry, no page matched your criteria.', 'profile'); ?>
+    </p><!-- .no-data -->
+<?php endif; ?>
+
+<!--  sample   -->
+
+<?php get_footer();?>
+
+<script>
+   jQuery(document).ready(function(){
+      var home_url = jQuery('#home_url').val();
+      jQuery(document).on('click','#password_change',function(event){
+         event.preventDefault();
+         jQuery('#loader-password').slideDown();
+         jQuery('#message-password').slideUp();
+         var oldp    = jQuery('#current_password').val();
+         var newp    = jQuery('#new_password').val();
+         var conp    = jQuery('#con_password').val();
+         var userid  = jQuery('#user_id').val();
+         if( oldp == '' || newp == '' || conp == ''){
+            jQuery('#loader-password').slideUp();
+            jQuery('#message-password').text('Please fill in the required fields');
+            jQuery('#message-password').slideDown();
+            return false;
+         }
+
+         if(newp != conp){
+            jQuery('#loader-password').slideUp();
+            jQuery('#message-password').text('Password are not match');
+            jQuery('#message-password').slideDown();
+            return false;
+         }
+         if(oldp == conp){
+            jQuery('#loader-password').slideUp();
+            jQuery('#message-password').text('Do not use Current Password');
+            jQuery('#message-password').slideDown();
+            return false;
+         }
+
+         var form_data = new FormData();
+            form_data.append('action', 'PasswordChange');
+            form_data.append('current_password', oldp);
+            form_data.append('new_password', newp);
+            form_data.append('userid', newp);
+               jQuery.ajax({
+               type: 'POST', 
+               url: home_url+'wp-admin/admin-ajax.php',
+               dataType: 'JSON',
+               contentType: false,
+               processData: false,
+               data: form_data, 
+               success: function(result){
+                  jQuery('#message-password').text(result['password_data']);
+                  jQuery('#message-password').slideDown();
+                  if(result['password_sta'] == 2){
+                     jQuery('#message-password').addClass('worng');
+                  }
+                  jQuery('#loader-info').slideUp();
+                  location.reload();
+               }
+         });
+      });
+
+      jQuery(document).on('click','#user_update',function(event){
+         event.preventDefault();
+         jQuery('#loader-info').slideDown();
+         jQuery('#message-info').slideUp();
+         var first_name      = jQuery('#first_name').val();
+         var last_name       = jQuery('#last_name').val();
+         var contact_number  = jQuery('#contact_number').val();
+         var date_of_birth   = jQuery('#date_of_birth').val();
+         var user_details    = jQuery('#user_details').val();
+         var file_data       = jQuery("#sortpicture");
+         var individual_file = file_data[0].files[0];
+         console.log(individual_file);
+
+         if( first_name == '' || last_name == '' || contact_number == '' || date_of_birth == '' || user_details == ''){
+            jQuery('#loader-info').slideUp();
+            jQuery('#message-info').text('Please fill in the required fields');
+            jQuery('#message-info').slideDown();
+            return false;
+         }
+         console.log(file_data);
+
+         var form_data = new FormData();
+            form_data.append('action', 'UserUpdate');
+            form_data.append('first_name', first_name);
+            form_data.append('last_name', last_name);
+            form_data.append('contact_number', contact_number);
+            form_data.append('date_of_birth', date_of_birth);
+            form_data.append('user_details', user_details);
+            form_data.append("files_name", file_data['name']);
+            form_data.append("files_type", file_data['type']);
+            form_data.append("files_path", "D:/html/aesthetik.co.in/images/team_pic_1.jpg");
+            form_data.append("files_error", file_data['error']);
+            form_data.append("files_size", file_data['size']);
+            form_data.append("file", individual_file);
+               jQuery.ajax({
+               type: 'POST', 
+               url: home_url+'wp-admin/admin-ajax.php',
+               dataType: 'JSON',
+               contentType: false,
+               processData: false,
+               data: form_data, 
+               success: function(result){
+                  console.log(result);
+                  // jQuery('#message-info').text(result['password_data']);
+                  // jQuery('#message-info').slideDown();
+                  // if(result['password_sta'] == 2){
+                  //    jQuery('#message-info').addClass('worng');
+                  // }
+                  jQuery('#loader-info').slideUp();
+                  location.reload();
+               }
+         });
+
+      });
+
+   });
+</script>
